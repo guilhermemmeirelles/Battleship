@@ -27,6 +27,7 @@ Make top-down for project
 299	Demonstrate an understanding of the difference between specification and implementation.
 Specification – plans/ blueprint / description
 Implementation – Actual code
+https://www.quora.com/What-is-the-difference-between-specification-and-implementation-in-computer-science-How-can-these-two-be-clearly-differentiated-in-a-thesis
 
 308	Build a simple network server using Racket
 Priority after game is playable
