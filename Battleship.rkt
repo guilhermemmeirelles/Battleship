@@ -768,8 +768,49 @@
 ;----------------------------------Window and GUI elements-------------------------------------
 
 
+(define startFrame (new frame% [label "Battleships"] [min-height 400] [min-width 400] [alignment '(center center)]))
+
+
+(define (on-new-button button event)
+  (send startFrame show #f)
+  (send myFrame show #t))
+(define (on-quit-button button event)
+  (send startFrame show #f))
+
+
+
+
+(define new-button (new button%
+                          [parent startFrame]
+                          [label "New Game"]
+                          [vert-margin 10]
+                          [callback on-new-button]))
+
+
+(define load-button(new button%
+                          [parent startFrame]
+                          [label "Load"]
+                          [vert-margin 10]
+                          [callback on-new-button]))
+
+
+(define quit-button (new button%
+                           [parent startFrame]
+                           [label "Quit"]
+                           [vert-margin 10]
+                           [callback on-quit-button]))
+
+
+
+
+
+
+
+
+
+
 ;create the frame of the game
-(define myFrame (new frame% [label "Battleships"]
+(define myFrame (new frame% [label" Battleships" ]
                      [width 800] [height 700] [style '(no-resize-border)][alignment '(center center)]))
 
 (define hPan1 (new horizontal-panel% [parent myFrame]
@@ -859,7 +900,7 @@
 
 
 
-(send myFrame show #t)
+;send myFrame show #t)
 
 (define setupGame (lambda () 
                               
@@ -869,5 +910,5 @@
                               
                     ))
 
-
+(send startFrame show #t)
 (setupGame)
