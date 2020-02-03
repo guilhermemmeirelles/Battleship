@@ -174,8 +174,8 @@
 (define checkCounter
   (lambda ()
     (cond
-      [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f)]
-      [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)]
+      [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f)] ;(send myFrame show #f) (send startFrame show #t)]
+      [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)];(send myFrame show #f) (send startFrame show #t)]
       )))
 
 
