@@ -174,8 +174,8 @@
 (define checkCounter
   (lambda ()
     (cond
-      [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f)] ;(send myFrame show #f) (send startFrame show #t)]
-      [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)];(send myFrame show #f) (send startFrame show #t)]
+      [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f) (send myFrame show #f) (send startFrame show #t)]
+      [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)(send myFrame show #f) (send startFrame show #t)]
       )))
 
 
@@ -776,8 +776,9 @@
   (send myFrame show #t))
 (define (on-quit-button button event)
   (send startFrame show #f))
-
-
+(define (on-load-button button event)
+  (send startFrame show #f)
+  (send myFrame show #t))
 
 
 (define new-button (new button%
@@ -787,11 +788,7 @@
                           [callback on-new-button]))
 
 
-(define load-button(new button%
-                          [parent startFrame]
-                          [label "Load"]
-                          [vert-margin 10]
-                          [callback on-new-button]))
+(define load-button(new button% [parent startFrame]  [label "Load"]     [vert-margin 10]    [callback on-new-button]))
 
 
 (define quit-button (new button%
@@ -892,9 +889,17 @@
 
 (define textfield (new text-field% [parent hSubPan] [label ""][horiz-margin 10]))
 
-(define startButton (new button% [parent hSubPan] [label "start"][callback (lambda (button event)  (send startButton enable #f)(send insertButton enable #t)(CruiserPosition 1))]))
+(define startButton (new button% [parent hSubPan] [label "Start"][callback (lambda (button event)  (send startButton enable #f)(send insertButton enable #t)(CruiserPosition 1))]))
 
-(define insertButton (new button% [parent hSubPan] [label "enter"][callback (lambda (button event) (set! txt (send textfield get-value))(insertShip))]))
+(define insertButton (new button% [parent hSubPan] [label "Enter"][callback (lambda (button event) (set! txt (send textfield get-value))(insertShip))]))
+
+(define menuButton (new button% [parent hSubPan] [label "Menu"]
+                        [callback (lambda (button event)
+                                    (send myFrame show #f)
+                                    (send startFrame show #t)
+                                    (send new-button enable #f)
+                                    (send load-button enable #t)
+                                                                           )]))
 
 (send insertButton enable #f)
 
