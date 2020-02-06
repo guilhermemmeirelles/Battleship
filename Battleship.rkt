@@ -1,7 +1,9 @@
+
+  
 #lang racket
 (require racket/gui/base)
 
-
+;Player 1 board which will contain the respective placement of the ships
 (define board1 (vector
                 (vector 0 0 0 0)
                 (vector 0 0 0 0)
@@ -10,6 +12,7 @@
 
                 ))
 
+;Player 2 board which will contain the respective placement of the ships
 (define board2 (vector
                 (vector 0 0 0 0)
                 (vector 0 0 0 0)
@@ -18,6 +21,7 @@
 
                 ))
 
+;Matrix which contains the sunken ships and the missed rockets for player 1
 (define hitboard1 (vector
                    (vector 0 0 0 0)
                    (vector 0 0 0 0)
@@ -26,6 +30,7 @@
 
                    ))
 
+;Matrix which contains the sunken ships and the missed rockets for player 2
 (define hitboard2 (vector
                    (vector 0 0 0 0)
                    (vector 0 0 0 0)
@@ -38,20 +43,20 @@
 (define PositionTable (hash
 
                        "A1" (vector 0 0 0 0)
-                       "B1" (vector 94 78 0 1)
-                       "C1" (vector 188 156 0 2) 
-                       "D1" (vector 282 234 0 3) 
-                       "A2" (vector 0 0 1 0)
+                       "B1" (vector 94 0 0 1)
+                       "C1" (vector 188 0 0 2) 
+                       "D1" (vector 282 0 0 3) 
+                       "A2" (vector 0 78 1 0)
                        "B2" (vector 94 78 1 1)
-                       "C2" (vector 188 156 1 2) 
-                       "D2" (vector 282 234 1 3) 
-                       "A3" (vector 0 0 2 0)
-                       "B3" (vector 94 78 2 1)
+                       "C2" (vector 188 78 1 2) 
+                       "D2" (vector 282 78 1 3) 
+                       "A3" (vector 0 156 2 0)
+                       "B3" (vector 94 156 2 1)
                        "C3" (vector 188 156 2 2) 
-                       "D3" (vector 282 234 2 3) 
-                       "A4" (vector 0 0 3 0)
-                       "B4" (vector 94 78 3 1)
-                       "C4" (vector 188 156 3 2) 
+                       "D3" (vector 282 156 2 3) 
+                       "A4" (vector 0 234 3 0)
+                       "B4" (vector 94 234 3 1)
+                       "C4" (vector 188 234 3 2) 
                        "D4" (vector 282 234 3 3) 
                     
                
@@ -59,6 +64,7 @@
                
                        ))
 
+;hash table contain the respective x and y of each cell and the position in the matrix board.
 (define Pos (hash
 
              0 (vector 0 0 0 0)
@@ -84,21 +90,42 @@
              ))
 
 
-
+;variable containing the number of the player
 (define currentPlayer 1)
+
+;variable used to check if the cruiser ship has been placed succesfully
 (define Cruiser 0)
+
+;variable used to check if the destroyer ships has been placed succesfully
 (define Destroyer 0)
+
+;variable used to determine which part of the ship has to be placed next
 (define size 0)
+
+;variable containing the column of the matrix
 (define x 0)
+
+;variable containing the row of the matrix
 (define y 0)
+
+;variable used to determine if the startButton has been pressed
 (define start 0)
+
+;counter that decreases every part of the ships player 1 has sunken
 (define counter1 5)
+
+
+;counter that decreases every part of the ships player 1 has sunken
 (define counter2 5)
 
-
+;variable containing the string from the textfield
 (define txt null)
 
 ;-------------------Functions-----------------------------------------------------------
+
+
+
+;function which will display on the textarea
 
 
 
@@ -120,6 +147,7 @@
       )))
 
 
+;function which will display on the textarea
 (define DestroyerPosition
   (lambda (x)
     (cond
@@ -138,8 +166,10 @@
 
                                       
 
+;function that displays an error message every time the player inserts a value that is incorrect
+
 (define ErrorMessage
-  (lambda (x)
+  (lambda (x) 
     (cond
       [(= currentPlayer 1)(cond
                             [(= x 1)(send textarea set-value "Inserted value is incorrect \n Player 1: \n - type a coordinate such as A1 or B4 and press enter to position your cruiser")]
@@ -152,11 +182,14 @@
                             )]
       )))
 
+
 (define read (lambda ()
                (set! txt ((send textfield get-value)))
                
                )
   )
+
+;function used to display which player has to shoot the rocket and if he hits the target he gets another chance
 
 (define shootRocket
   (lambda (x)
@@ -172,14 +205,21 @@
       )))
 
 
+;function used to declare the winner
 (define checkCounter
   (lambda ()
     (cond
+
+      [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f)] ;(send myFrame show #f) (send startFrame show #t)]
+      [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)];(send myFrame show #f) (send startFrame show #t)]
+
       [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f) (send myFrame show #f) (send startFrame show #t)]
       [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)(send myFrame show #f) (send startFrame show #t)]
+
       )))
 
 
+;function used to draw the grids and the relative ships and sunken ships
 (define draw (lambda ()
                (send can1 refresh-now)
                (send can1 on-paint)
@@ -244,9 +284,12 @@
 
 
 
-
+;function that the button insertButton calls, it's used to get the input from the user and check if the value is correct, this function is mainly used for the placement of the ships
+;and for the player to hit the target
+(define insertShip
 
 (define insertShip  
+
   (lambda ()
     
     (cond
@@ -273,9 +316,23 @@
                
                [(= size 1)
                 (cond
+
+                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt)) 
+                   (cond
+                     [(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))(vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
+                      (vector-set!
+                       (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
+                       (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+                      (set! size 1)(CruiserPosition 2)(draw)]
+                     )]
+
+                  (else (ErrorMessage 1))
+                  )]
+               
+               [(= size 1)
+                (cond
                   [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
-                   
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
 
@@ -329,6 +386,8 @@
                            )]
                         )
                       (println "- x 1 #f"))]
+                 
+
                   (ErrorMessage 1)
                   )]
 
@@ -574,6 +633,7 @@
 
                [(= size 2)
                 (cond
+
                   [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
@@ -586,6 +646,7 @@
                          (cond
                            [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                             (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+
                             (set! size 0)
                             (set! Cruiser 1)
                             (DestroyerPosition 1)
@@ -596,6 +657,7 @@
 
                    (if(< (+ x 2) 4)
                       (cond
+
                         [(and(equal? (vector-ref (vector-ref board2 (+ x 1)) y) "C")(equal? (vector-ref (vector-ref board2 (+ x 2)) y) "C"))
                          (cond
                            [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
@@ -610,10 +672,11 @@
 
                    (if(>= (- y 2) 0)
                       (cond
-                        [(and(equal? (vector-ref (vector-ref board2 x) (- y 1)) "C")(equal? (vector-ref (vector-ref board2 x) (- y 2)) "C"))
+
+                        [(and(equal? (vector-ref (vector-ref board1 x) (- y 1)) "C")(equal? (vector-ref (vector-ref board1 x) (- y 2)) "C"))
                          (cond
-                           [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
-                            (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+                           [(= (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
+                            (vector-set! (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
                             (set! size 0)
                             (set! Cruiser 1)
                             (DestroyerPosition 1)
@@ -628,6 +691,7 @@
                          (cond
                            [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                             (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+
                             (set! size 0)
                             (set! Cruiser 1)
                             (DestroyerPosition 1)
@@ -636,10 +700,10 @@
                         )
                       (println "+ Y 1 #f"))
                    ]
-                  (ErrorMessage 1)
+                  (else (ErrorMessage 1))
                   )]
                )]
-
+            
             [(= Destroyer 0)
              (cond
                [(= size 0)
@@ -649,15 +713,19 @@
                      [(> (string-length txt) 2) (ErrorMessage 1)]
                      [(equal? (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "D")
+
                       (set! size 1)
                       (DestroyerPosition 2)
                       (draw)]
                      )]
-                  (ErrorMessage 1)
+
+                  (else (ErrorMessage 2))
+
                   )]
 
                [(= size 1)
                 (cond
+
                   [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
@@ -724,6 +792,11 @@
                         )
                       (println "- x 1 #f"))
                    ]
+
+                  (else (ErrorMessage 2))
+                  )]
+               )]
+
                   (ErrorMessage 1)
                   )]
                )]
@@ -806,6 +879,16 @@
 (define load-button(new button% [parent startFrame]  [label "Load"]     [vert-margin 10]    [callback on-new-button]))
 
 
+;button that loads the game
+(define load-button(new button%
+                          [parent startFrame]
+                          [label "Load"]
+                          [vert-margin 10]
+                          [callback on-new-button]))
+
+
+;button that closes the game
+
 (define quit-button (new button%
                            [parent startFrame]
                            [label "Quit"]
@@ -825,16 +908,23 @@
 (define myFrame (new frame% [label" Battleships" ]
                      [width 800] [height 700] [style '(no-resize-border)][alignment '(center center)]))
 
+
+;horizontal panel which will contain the canvas for the first player
+
 (define hPan1 (new horizontal-panel% [parent myFrame]
                    [alignment '(center center)]))
 
         
 
-
+;horizontal panel which will contain the canvas for the second player
 (define hPan2 (new horizontal-panel% [parent myFrame]
                    [alignment '(center center)]))
 
+
+;canvas which will contain the grid for the first player
 (define can1 (new canvas% [parent hPan1][vert-margin 10][horiz-margin 20][min-width 120][min-height 110]
+
+                  ;callback function that creates the standard grid 
 
                   [paint-callback 
                    (λ(can1 dc1)
@@ -866,11 +956,15 @@
 
 
 
-
+;object textfield which will be used to display messages and error messages
 (define textarea (new text-field% [parent hPan1][label ""][vert-margin 10] [horiz-margin 10][style '(multiple)]))
 
+
+;canvas which will contain the grid for the second player
 (define can2 (new canvas% [parent hPan2][min-height 110][min-width 120][horiz-margin 20][vert-margin 10]
 
+
+                   ;callback function that creates the standard grid 
 
                   [paint-callback 
                    (λ(can2 dc2)
@@ -898,37 +992,46 @@
 
                      )]
                   ))
-
+                  
+;vertical pane used to contain the buttons and the textfield
 (define hSubPan (new vertical-panel% [parent hPan2]
                      [alignment '(center center)]))
 
+;object textfield used to input values by user
 (define textfield (new text-field% [parent hSubPan] [label ""][horiz-margin 10]))
 
-(define startButton (new button% [parent hSubPan] [label "Start"][callback (lambda (button event)  (send startButton enable #f)(send insertButton enable #t)(CruiserPosition 1))]))
+;button used to start the game 
+(define startButton (new button% [parent hSubPan] [label "start"][callback (lambda (button event)  (send startButton enable #f)(send insertButton enable #t)(CruiserPosition 1))]))
 
-(define insertButton (new button% [parent hSubPan] [label "Enter"][callback (lambda (button event) (set! txt (string-trim (send textfield get-value)))(insertShip))]))
+;button used to insert the ship placement and to hit the target
+(define insertButton (new button% [parent hSubPan] [label "enter"][callback (lambda (button event) (set! txt (send textfield get-value))(insertShip))]))
 
-(define menuButton (new button% [parent hSubPan] [label "Menu"]
-                        [callback (lambda (button event)
+;the button insertButton is disabled by default
+(send insertButton enable #f)
+
+(define menuButton (new button% [parent hSubPan] [label "Menu"] [callback (lambda (button event)
                                     (send myFrame show #f)
                                     (send startFrame show #t)
                                     (send new-button enable #f)
-                                    (send load-button enable #t)
-                                                                           )]))
-
-(send insertButton enable #f)
+                                    (send load-button enable #t))]))
 
 
 
-;send myFrame show #t)
 
+
+
+;function which will contain the rules of the game
 (define setupGame (lambda () 
                               
                     (send textarea set-value
-                          "Welcome to Battleships \n At the start of the game each player places their 3 ships \n - From there players take turn shooting rockets into the enemy sea space \n - The small ship is sunk with 1 rocket and the big ship is sunk with 2 rockets \n - The first player to sink 3 ships wins \n Press start to start the game")
+                          "Welcome to Battleships \n At the start of the game each player places their 2 ships \n - From there players take turn shooting rockets into the enemy sea space \n - The small ship is sunk with 2 rocket and the big ship is sunk with 3 rockets \n - The first player to sink 2 ships wins \n Press start to start the game")
+
                               
                               
                     ))
+
+
+;function to show the startFrame
 
 (send startFrame show #t)
 (setupGame)
