@@ -124,7 +124,11 @@
 ;-------------------Functions-----------------------------------------------------------
 
 
+
 ;function which will display on the textarea
+
+
+
 (define CruiserPosition
   (lambda (x)
     (cond
@@ -141,6 +145,7 @@
                                     
                             )]
       )))
+
 
 ;function which will display on the textarea
 (define DestroyerPosition
@@ -160,7 +165,9 @@
                                       
 
                                       
+
 ;function that displays an error message every time the player inserts a value that is incorrect
+
 (define ErrorMessage
   (lambda (x) 
     (cond
@@ -176,7 +183,14 @@
       )))
 
 
+(define read (lambda ()
+               (set! txt ((send textfield get-value)))
+               
+               )
+  )
+
 ;function used to display which player has to shoot the rocket and if he hits the target he gets another chance
+
 (define shootRocket
   (lambda (x)
     (cond
@@ -195,8 +209,13 @@
 (define checkCounter
   (lambda ()
     (cond
+
       [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f)] ;(send myFrame show #f) (send startFrame show #t)]
       [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)];(send myFrame show #f) (send startFrame show #t)]
+
+      [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f) (send myFrame show #f) (send startFrame show #t)]
+      [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)(send myFrame show #f) (send startFrame show #t)]
+
       )))
 
 
@@ -265,11 +284,14 @@
 
 
 
-
 ;function that the button insertButton calls, it's used to get the input from the user and check if the value is correct, this function is mainly used for the placement of the ships
 ;and for the player to hit the target
 (define insertShip
+
+(define insertShip  
+
   (lambda ()
+    
     (cond
       [(= start 0)   
        (cond
@@ -278,8 +300,24 @@
             [(= Cruiser 0)
              (cond
                [(= size 0)
+                (cond                
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))                  
+                   (cond                     
+                     [(> (string-length txt) 2) (ErrorMessage 1)]
+                     [(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))(vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
+                      (vector-set!
+                       (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
+                       (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+                      (set! size 1)(CruiserPosition 2)(draw)]
+                     )]
+
+                  (ErrorMessage 1)
+                  )]
+               
+               [(= size 1)
                 (cond
-                  [(regexp-match #px"(\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b)" (string-upcase txt))
+
+                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt)) 
                    (cond
                      [(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))(vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set!
@@ -293,7 +331,8 @@
                
                [(= size 1)
                 (cond
-                  [(regexp-match #px"(\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b)"  (string-upcase txt))
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
 
@@ -347,12 +386,15 @@
                            )]
                         )
                       (println "- x 1 #f"))]
-                  (else (ErrorMessage 1))
+                 
+
+                  (ErrorMessage 1)
                   )]
 
                [(= size 2)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
                    (println x)(println y)
@@ -412,7 +454,7 @@
                         )
                       (println "+ Y 1 #f"))
                    ]
-                  (else (ErrorMessage 1))
+                  (ErrorMessage 1)
                   )]
                )]
             
@@ -420,7 +462,8 @@
              (cond
                [(= size 0)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (cond
                      [(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set! (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "D")
@@ -428,12 +471,13 @@
                       (DestroyerPosition 2)
                       (draw)]
                      )]
-                  (else (ErrorMessage 2))
+                  (ErrorMessage 1)
                   )]
 
                [(= size 1)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
 
@@ -460,7 +504,8 @@
                             (vector-set! (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))(vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "D")
                             (set! size 0)
                             (set! Cruiser 0)
-                            (draw)                         
+                            (draw)
+                            (println "hello")
                             (set! currentPlayer 2)
                             (CruiserPosition 1)
                             (draw)]
@@ -476,7 +521,7 @@
                             (vector-set! (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "D")
                             (set! size 0)
                             (set! Cruiser 0)
-                            (draw)
+                            (draw)(println "hello")
                             (set! currentPlayer 2)
                             (CruiserPosition 1)
                             (draw)]
@@ -492,7 +537,8 @@
                             (vector-set! (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "D")
                             (set! size 0)
                             (set! Cruiser 0)
-                            (draw)                            
+                            (draw)
+                            (println "hello")
                             (set! currentPlayer 2)
                             (CruiserPosition 1)
                             (draw)]
@@ -500,7 +546,7 @@
                         )
                       (println "- x 1 #f"))
                    ]
-                  (else (ErrorMessage 2))
+                  (ErrorMessage 1)
                   )]
                )]
             )]
@@ -511,20 +557,22 @@
              (cond
                [(= size 0)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (cond
+                     [(> (string-length txt) 2) (ErrorMessage 1)]
                      [(equal? (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
                       (set! size 1)
                       (CruiserPosition 2)
                       (draw)]
                      )]
-                 (else (ErrorMessage 1))
+                  (ErrorMessage 1)
                   )]
 
                [(= size 1)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))       
 
@@ -580,12 +628,14 @@
                         )
                       (println "- x 1 #f"))
                    ]
-                  (else (ErrorMessage 1))
+                  (ErrorMessage 1)
                   )]
 
                [(= size 2)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
                    (println x) (println y)
@@ -596,6 +646,7 @@
                          (cond
                            [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                             (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+
                             (set! size 0)
                             (set! Cruiser 1)
                             (DestroyerPosition 1)
@@ -606,6 +657,7 @@
 
                    (if(< (+ x 2) 4)
                       (cond
+
                         [(and(equal? (vector-ref (vector-ref board2 (+ x 1)) y) "C")(equal? (vector-ref (vector-ref board2 (+ x 2)) y) "C"))
                          (cond
                            [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
@@ -620,10 +672,11 @@
 
                    (if(>= (- y 2) 0)
                       (cond
-                        [(and(equal? (vector-ref (vector-ref board2 x) (- y 1)) "C")(equal? (vector-ref (vector-ref board2 x) (- y 2)) "C"))
+
+                        [(and(equal? (vector-ref (vector-ref board1 x) (- y 1)) "C")(equal? (vector-ref (vector-ref board1 x) (- y 2)) "C"))
                          (cond
-                           [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
-                            (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+                           [(= (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
+                            (vector-set! (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
                             (set! size 0)
                             (set! Cruiser 1)
                             (DestroyerPosition 1)
@@ -638,6 +691,7 @@
                          (cond
                            [(= (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                             (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
+
                             (set! size 0)
                             (set! Cruiser 1)
                             (DestroyerPosition 1)
@@ -649,25 +703,31 @@
                   (else (ErrorMessage 1))
                   )]
                )]
-
+            
             [(= Destroyer 0)
              (cond
                [(= size 0)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (cond
+                     [(> (string-length txt) 2) (ErrorMessage 1)]
                      [(equal? (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "D")
+
                       (set! size 1)
                       (DestroyerPosition 2)
                       (draw)]
                      )]
+
                   (else (ErrorMessage 2))
+
                   )]
 
                [(= size 1)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
 
@@ -732,7 +792,12 @@
                         )
                       (println "- x 1 #f"))
                    ]
+
                   (else (ErrorMessage 2))
+                  )]
+               )]
+
+                  (ErrorMessage 1)
                   )]
                )]
             )])]
@@ -741,8 +806,9 @@
        (cond
          [(= currentPlayer 1)
           (cond
-            [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+            [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
              (cond
+               [(> (string-length txt) 2) (ErrorMessage 1)]
                [(and
                  (not(equal? (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0))
                  (not(equal? (vector-ref (vector-ref hitboard1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) "H")))
@@ -761,8 +827,9 @@
 
          [(= currentPlayer 2)
           (cond
-            [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+            [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
              (cond
+               [(> (string-length txt) 2) (ErrorMessage 1)]
                [(and
                  (not(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0))
                  (not(equal? (vector-ref (vector-ref hitboard2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) "H") ))
@@ -788,27 +855,29 @@
 
 ;----------------------------------Window and GUI elements-------------------------------------
 
-;start frame that contains the start menu
+
 (define startFrame (new frame% [label "Battleships"] [min-height 400] [min-width 400] [alignment '(center center)]))
 
 
-;function which shows myFrame frame which will contain all the relative GUI elements used for the game and hides the startFrame
 (define (on-new-button button event)
   (send startFrame show #f)
   (send myFrame show #t))
-
-;function which closes the startFrame
 (define (on-quit-button button event)
   (send startFrame show #f))
+(define (on-load-button button event)
+  (send startFrame show #f)
+  (send myFrame show #t))
 
 
-
-;button that shows myFrame
 (define new-button (new button%
                           [parent startFrame]
                           [label "New Game"]
                           [vert-margin 10]
                           [callback on-new-button]))
+
+
+(define load-button(new button% [parent startFrame]  [label "Load"]     [vert-margin 10]    [callback on-new-button]))
+
 
 ;button that loads the game
 (define load-button(new button%
@@ -817,7 +886,9 @@
                           [vert-margin 10]
                           [callback on-new-button]))
 
+
 ;button that closes the game
+
 (define quit-button (new button%
                            [parent startFrame]
                            [label "Quit"]
@@ -837,7 +908,9 @@
 (define myFrame (new frame% [label" Battleships" ]
                      [width 800] [height 700] [style '(no-resize-border)][alignment '(center center)]))
 
+
 ;horizontal panel which will contain the canvas for the first player
+
 (define hPan1 (new horizontal-panel% [parent myFrame]
                    [alignment '(center center)]))
 
@@ -848,11 +921,11 @@
                    [alignment '(center center)]))
 
 
-
 ;canvas which will contain the grid for the first player
 (define can1 (new canvas% [parent hPan1][vert-margin 10][horiz-margin 20][min-width 120][min-height 110]
 
                   ;callback function that creates the standard grid 
+
                   [paint-callback 
                    (λ(can1 dc1)
 
@@ -886,10 +959,13 @@
 ;object textfield which will be used to display messages and error messages
 (define textarea (new text-field% [parent hPan1][label ""][vert-margin 10] [horiz-margin 10][style '(multiple)]))
 
+
 ;canvas which will contain the grid for the second player
 (define can2 (new canvas% [parent hPan2][min-height 110][min-width 120][horiz-margin 20][vert-margin 10]
 
+
                    ;callback function that creates the standard grid 
+
                   [paint-callback 
                    (λ(can2 dc2)
 
@@ -916,7 +992,7 @@
 
                      )]
                   ))
-
+                  
 ;vertical pane used to contain the buttons and the textfield
 (define hSubPan (new vertical-panel% [parent hPan2]
                      [alignment '(center center)]))
@@ -933,6 +1009,14 @@
 ;the button insertButton is disabled by default
 (send insertButton enable #f)
 
+(define menuButton (new button% [parent hSubPan] [label "Menu"] [callback (lambda (button event)
+                                    (send myFrame show #f)
+                                    (send startFrame show #t)
+                                    (send new-button enable #f)
+                                    (send load-button enable #t))]))
+
+
+
 
 
 
@@ -941,10 +1025,13 @@
                               
                     (send textarea set-value
                           "Welcome to Battleships \n At the start of the game each player places their 2 ships \n - From there players take turn shooting rockets into the enemy sea space \n - The small ship is sunk with 2 rocket and the big ship is sunk with 3 rockets \n - The first player to sink 2 ships wins \n Press start to start the game")
+
                               
                               
                     ))
 
+
 ;function to show the startFrame
+
 (send startFrame show #t)
 (setupGame)
