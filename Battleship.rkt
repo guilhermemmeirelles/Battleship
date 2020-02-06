@@ -153,7 +153,8 @@
       )))
 
 (define read (lambda ()
-               (set! txt (send textfield get-value))
+               (set! txt ((send textfield get-value)))
+               
                )
   )
 
@@ -245,8 +246,9 @@
 
 
 
-(define insertShip
+(define insertShip  
   (lambda ()
+    
     (cond
       [(= start 0)   
        (cond
@@ -255,9 +257,10 @@
             [(= Cruiser 0)
              (cond
                [(= size 0)
-                (cond
-                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
-                   (cond
+                (cond                
+                  [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))                  
+                   (cond                     
+                     [(> (string-length txt) 2) (ErrorMessage 1)]
                      [(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))(vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set!
                        (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
@@ -270,7 +273,9 @@
                
                [(= size 1)
                 (cond
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
+                   
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
 
@@ -329,6 +334,7 @@
 
                [(= size 2)
                 (cond
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
@@ -397,6 +403,7 @@
              (cond
                [(= size 0)
                 (cond
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (cond
                      [(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
@@ -410,6 +417,7 @@
 
                [(= size 1)
                 (cond
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
@@ -492,6 +500,7 @@
                 (cond
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (cond
+                     [(> (string-length txt) 2) (ErrorMessage 1)]
                      [(equal? (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "C")
                       (set! size 1)
@@ -503,6 +512,7 @@
 
                [(= size 1)
                 (cond
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))       
@@ -564,6 +574,7 @@
 
                [(= size 2)
                 (cond
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
@@ -635,6 +646,7 @@
                 (cond
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (cond
+                     [(> (string-length txt) 2) (ErrorMessage 1)]
                      [(equal? (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set! (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2) "D")
                       (set! size 1)
@@ -646,6 +658,7 @@
 
                [(= size 1)
                 (cond
+                  [(> (string-length txt) 2) (ErrorMessage 1)]
                   [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
@@ -722,6 +735,7 @@
           (cond
             [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
              (cond
+               [(> (string-length txt) 2) (ErrorMessage 1)]
                [(and
                  (not(equal? (vector-ref (vector-ref board2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0))
                  (not(equal? (vector-ref (vector-ref hitboard1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) "H")))
@@ -742,6 +756,7 @@
           (cond
             [(regexp-match #rx"(A1|B1|C1|D1|A2|B2|C2|D2|A3|B3|C3|D3|A4|B4|C4|D4)" (string-upcase txt))
              (cond
+               [(> (string-length txt) 2) (ErrorMessage 1)]
                [(and
                  (not(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0))
                  (not(equal? (vector-ref (vector-ref hitboard2 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3)) (vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) "H") ))
@@ -891,7 +906,7 @@
 
 (define startButton (new button% [parent hSubPan] [label "Start"][callback (lambda (button event)  (send startButton enable #f)(send insertButton enable #t)(CruiserPosition 1))]))
 
-(define insertButton (new button% [parent hSubPan] [label "Enter"][callback (lambda (button event) (set! txt (send textfield get-value))(insertShip))]))
+(define insertButton (new button% [parent hSubPan] [label "Enter"][callback (lambda (button event) (set! txt (string-trim (send textfield get-value)))(insertShip))]))
 
 (define menuButton (new button% [parent hSubPan] [label "Menu"]
                         [callback (lambda (button event)
