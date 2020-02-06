@@ -279,7 +279,7 @@
              (cond
                [(= size 0)
                 (cond
-                  [(regexp-match #px"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b" (string-upcase txt))
+                  [(regexp-match #px"(\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b)" (string-upcase txt))
                    (cond
                      [(equal? (vector-ref (vector-ref board1 (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))(vector-ref (hash-ref PositionTable (string-upcase txt)) 2)) 0)
                       (vector-set!
@@ -293,7 +293,7 @@
                
                [(= size 1)
                 (cond
-                  [(regexp-match #rx"\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b"  (string-upcase txt))
+                  [(regexp-match #px"(\\bA1\\b|\\bB1\\b|\\bC1\\b|\\bD1\\b|\\bA2\\b|\\bB2\\b|\\bC2\\b|\\bD2\\b|\\bA3\\b|\\bB3\\b|\\bC3\\b|\\bD3\\b|\\bA4\\b|\\bB4\\b|\\bC4\\b|\\bD4\\b)"  (string-upcase txt))
                    (set! y (vector-ref (hash-ref PositionTable (string-upcase txt)) 2))
                    (set! x (vector-ref (hash-ref PositionTable (string-upcase txt)) 3))
 
@@ -846,6 +846,8 @@
 ;horizontal panel which will contain the canvas for the second player
 (define hPan2 (new horizontal-panel% [parent myFrame]
                    [alignment '(center center)]))
+
+
 
 ;canvas which will contain the grid for the first player
 (define can1 (new canvas% [parent hPan1][vert-margin 10][horiz-margin 20][min-width 120][min-height 110]
