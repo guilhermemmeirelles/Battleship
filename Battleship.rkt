@@ -182,8 +182,8 @@
 (define checkCounter
   (lambda ()
     (cond
-      [(= counter1 0)(send textarea set-value "Player 1 Wins")(send insertButton enable #f) (send myFrame show #f) (send startFrame show #t)]
-      [(= counter2 0)(send textarea set-value "Player 2 Wins")(send insertButton enable #f)(send myFrame show #f) (send startFrame show #t)]
+      [(= counter1 0)(send etextarea set-value "Player 1 Wins")(send insertButton enable #f) (send myFrame show #f) (send endFrame show #t)]
+      [(= counter2 0)(send etextarea set-value "Player 2 Wins")(send insertButton enable #f)(send myFrame show #f) (send endFrame show #t)]
       )))
 
 
@@ -797,7 +797,9 @@
 ;----------------------------------Window and GUI elements-------------------------------------
 
 
-(define startFrame (new frame% [label "Battleships"] [min-height 400] [min-width 400] [alignment '(center center)]))
+(define startFrame (new frame% [label "Battleships"] [min-width 300] [min-height 300] [style '(no-resize-border)][alignment '(center center)]))
+
+(define endFrame  (new frame% [label "Battleships"] [min-width 300] [min-height 300] [style '(no-resize-border)][alignment '(center center)]))
 
 
 (define (on-new-button button event)
@@ -809,6 +811,11 @@
   (send startFrame show #f)
   (send myFrame show #t))
 
+(define (on-enew-button button event)
+  (send endFrame show #f)
+  (send myFrame show #t))
+(define (on-equit-button button event)
+  (send endFrame show #f))
 
 (define new-button (new button%
                           [parent startFrame]
@@ -817,7 +824,17 @@
                           [callback on-new-button]))
 
 
+
+(define etextarea(new text-field% [parent endFrame][label ""][vert-margin 10] [horiz-margin 10][style '(multiple)]))
+
+(define enew-button (new button%
+                          [parent endFrame]
+                          [label "New Game"]
+                          [vert-margin 10]
+                          [callback on-new-button]))
+
 (define load-button(new button% [parent startFrame]  [label "Load"]     [vert-margin 10]    [callback on-new-button]))
+
 
 
 (define quit-button (new button%
@@ -825,6 +842,12 @@
                            [label "Quit"]
                            [vert-margin 10]
                            [callback on-quit-button]))
+(define equit-button (new button%
+                           [parent endFrame]
+                           [label "Quit"]
+                           [vert-margin 10]
+                           [callback on-quit-button]))
+
 
 
 
@@ -933,8 +956,6 @@
 (send insertButton enable #f)
 
 
-
-;send myFrame show #t)
 
 (define setupGame (lambda () 
                               
