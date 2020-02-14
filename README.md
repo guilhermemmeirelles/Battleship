@@ -1,8 +1,7 @@
 <h1> Battleships </h1>
 Block 2 Project for Computer Science Year 1 @ Middlesex University 
 
-
-Description:
+<h3> Description: </h3>
 
   In this very simple version on the Battleships board game, two players can play against each other on the same machine, taking turns at aiming at coordinates to try to take down the opponents Battleships.
    
@@ -45,6 +44,22 @@ Battleship:
   
 7. When a player shoots down both of the opponents ships, they win.  
   
+  
+  
+<h2> Additional info </h2>
+
+  <h3>Specification: </h3>
+  
+  Our goal was to create an accurate representation of the Battleship board game using, first of all a 10x10 grid and 5 ships. 
+  Since it is a video-game based version of the board game, we also originally planned to have mouse controls and allow for online play.
+  
+  <h3> Implementation </h3>
+    
+  Due to time and resource constraints, we opted to reduce the size of the grid to 4x4 and reduce the number of ships to 2. This way, we were able to finish the game and create most of the functions that would allow us to extend it after the project, should we wish to.
+  Mouse controls were replaced by keyboard coordinate inputs due their compability with hash maps wich allow for much easier testing of the game rules and conditions.
+  Networking has also not been implemented for the time being (v.0.1).
+  
+ 
   
   
  
