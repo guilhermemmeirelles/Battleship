@@ -56,7 +56,7 @@ Battleship:
   <h3> Implementation </h3>
     
   Due to time and resource constraints, we opted to reduce the size of the grid to 4x4 and reduce the number of ships to 2. This way, we were able to finish the game and create most of the functions that would allow us to extend it after the project, should we wish to.
-  Mouse controls were replaced by keyboard coordinate inputs due their compability with hash maps wich allow for much easier testing of the game rules and conditions.
+  Mouse controls were replaced by keyboard coordinate inputs due to their compability with hash maps which allow for much easier testing of the game rules and conditions.
   Networking has also not been implemented for the time being (v.0.1).
   
  
